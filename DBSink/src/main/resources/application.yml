@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: dbSink
+  cloud:
+    stream:
+      bindings:
+        input:
+          destination: process
+          group: processQueue
+          consumer:
+            max-attempts: 1
+      rabbit:
+        bindings:
+          input:
+            consumer:
+              autoBindDlq: true
+              deadLetterExchange: processDLX
+              deadLetterQueueName: processDLX.processQueueDLQ

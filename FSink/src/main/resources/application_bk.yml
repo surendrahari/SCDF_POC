@@ -1,0 +1,37 @@
+#https://github.com/spring-cloud/spring-cloud-stream-samples/blob/master/partitioning-samples/rabbit-partitioning/partitioning-consumer-sample-rabbit/src/main/resources/application.yml
+spring:
+  application:
+    name: fSink
+  cloud:
+    stream:
+      bindings:
+        input:
+          destination: process
+          group: processQueue
+          consumer:
+            max-attempts: 1
+        mb_dlq_input:
+          destination: mbsourceDLX
+          group: mbsourceQueueDLQ
+          consumer:
+            max-attempts: 1
+        sink_dlq_input:
+          destination: processDLX
+          group: processQueueDLQ
+          consumer:
+            max-attempts: 1
+        output:
+          destination: mbAck
+          producer:
+            requiredGroup: mbAckQueue
+      rabbit:
+        bindings:
+          input:
+            consumer:
+              bindingRoutingKey: fms
+          mb_dlq_input:
+            consumer:
+              bindingRoutingKey: fms
+          sink_dlq_input:
+            consumer:
+              bindingRoutingKey: fms

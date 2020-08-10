@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: fSource
+  cloud:
+    stream:
+      bindings:
+        input:
+          destination: mbsource
+          group: mbsourceQueue
+          consumer:
+            max-attempts: 1
+        output:
+          destination: process
+          producer:
+            requiredGroup: processQueue
+      rabbit:
+        bindings:
+          input:
+            consumer:
+              autoBindDlq: true
+              deadLetterExchange: mbsourceDLX
+              deadLetterRoutingKey: fms
+              deadLetterQueueName: mbsourceDLX.mbsourceQueueDLQ
+          output:
+            producer:
+              routing-key-expression: '''fms'''

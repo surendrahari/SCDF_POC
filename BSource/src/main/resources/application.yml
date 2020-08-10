@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: bSource
+  cloud:
+    stream:
+      bindings:
+        input:
+          destination: ibmsource
+          group: ibmsourceQueue
+          consumer:
+            max-attempts: 1
+        output:
+          destination: process
+          producer:
+            requiredGroup: processQueue
+      rabbit:
+        bindings:
+          input:
+            consumer:
+              autoBindDlq: true
+              deadLetterExchange: ibmsourceDLX
+              deadLetterRoutingKey: poms
+              deadLetterQueueName: ibmsourceDLX.ibmsourceQueueDLQ
+          output:
+            producer:
+              routing-key-expression: '''poms'''
